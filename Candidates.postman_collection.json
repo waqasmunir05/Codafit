@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "cd555e77-9f31-44af-b39a-3cfb8ae3d9d5",
+		"name": "Candidates",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17434379"
+	},
+	"item": [
+		{
+			"name": "Availability and Response Time Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"// Verify the endpoint is up and running\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//Consider the API endpoint not available if the response time is equal to or longer than 1 second\r",
+							"pm.test(\"Response time is less than 1 second\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidate",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative Tests - Availability and Response Time Check- Invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"// Verify the endpoint is up and running\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//Consider the API endpoint not available if the response time is equal to or longer than 1 second\r",
+							"pm.test(\"Response time is less than 1 second\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidatee",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidatee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Positive Tests - Validate Schema",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {\r",
+							"    type: \"array\",\r",
+							"    items: {\r",
+							"        type: \"object\",\r",
+							"        properties: {\r",
+							"            plateNo: { type: \"string\" },\r",
+							"            lat: { type: \"number\" },\r",
+							"            lng: { type: \"number\" },\r",
+							"            location: { type: \"string\" },\r",
+							"            imageURL: { type: \"string\" },\r",
+							"            lastUpdated: { type: \"string\" },\r",
+							"            //lastUpdated1: { type: \"number\" }\r",
+							"        },\r",
+							"        required: [\"plateNo\", \"lat\", \"lng\", \"location\",  \"lastUpdated\", ]\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"console.log(\"Response JSON:\", JSON.stringify(responseJson, null, 2));\r",
+							"\r",
+							"const jsonValidator = require('tv4');\r",
+							"const result = jsonValidator.validateMultiple(responseJson, schema);\r",
+							"\r",
+							"console.log(\"Validation Result:\", JSON.stringify(result, null, 2));\r",
+							"\r",
+							"if (result.valid) {\r",
+							"    console.log(\"API response schema is valid.\");\r",
+							"} else {\r",
+							"    console.error(\"API response schema is not valid. Errors:\", result.errors);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Schema is valid\", function() {\r",
+							"    pm.expect(result.valid).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidate",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative Tests - Invalid Schema",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {\r",
+							"    type: \"array\",\r",
+							"    items: {\r",
+							"        type: \"object\",\r",
+							"        properties: {\r",
+							"            plateNo: { type: \"string\" },\r",
+							"            lat: { type: \"number\" },\r",
+							"            lng: { type: \"number\" },\r",
+							"            location: { type: \"string\" },\r",
+							"            imageURL: { type: \"string\" },\r",
+							"            lastUpdated: { type: \"number\" },\r",
+							"            //lastUpdated1: { type: \"number\" }\r",
+							"        },\r",
+							"        required: [\"plateNo\", \"lat\", \"lng\", \"location\",  \"lastUpdated\", ]\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"console.log(\"Response JSON:\", JSON.stringify(responseJson, null, 2));\r",
+							"\r",
+							"const jsonValidator = require('tv4');\r",
+							"const result = jsonValidator.validateMultiple(responseJson, schema);\r",
+							"\r",
+							"console.log(\"Validation Result:\", JSON.stringify(result, null, 2));\r",
+							"\r",
+							"if (result.valid) {\r",
+							"    console.log(\"API response schema is valid.\");\r",
+							"    pm.test(\"Schema is Valid\", function() {\r",
+							"    //pm.expect(result.valid).to.be.false;\r",
+							"});\r",
+							"} else {\r",
+							"    console.error(\"API response schema is not valid. Errors:\", JSON.stringify(result.errors, null, 2));\r",
+							"    pm.test(\"Schema is invalid\", function() {\r",
+							"    //pm.expect(result.valid).to.be.false;\r",
+							"});\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidate",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order by LastUpdated Desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is sorted in desc by lastUpdated\", function () {\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"// Sort the JSON array based on the 'lastUpdated' property and the provided sort direction\r",
+							"const sortedResponseBody = responseJson.sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated));\r",
+							"console.log(sortedResponseBody);\r",
+							"// Update the response body with the sorted JSON\r",
+							"pm.response.json(sortedResponseBody);\r",
+							"});\r",
+							"// Parse the response JSON\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidate",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidate"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "lastUpdated",
+							"disabled": true
+						},
+						{
+							"key": "direction",
+							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validations and Assertions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"// Sort the JSON array based on the 'lastUpdated' property and the provided sort direction\r",
+							"const sortedResponseBody = responseJson.sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated));\r",
+							"// Find the correct entry for \"Wyatt Liam\"\r",
+							"const wyattLiamData = sortedResponseBody.find(item => item.driverName === \"Wyatt Liam\");\r",
+							"\r",
+							"// Check if the correct data entry for \"Wyatt Liam\" was found\r",
+							"if (!wyattLiamData) {\r",
+							"    console.error(\"Data for Wyatt Liam not found.\");\r",
+							"} else {\r",
+							"    pm.test(\"Data Assertions - Data is valid for Wyatt Liam\", function() {\r",
+							"        pm.expect(wyattLiamData.plateNo).to.eql(\"X 19599\"); // Check license plate number\r",
+							"        pm.expect(wyattLiamData.driverName).to.eql(\"Wyatt Liam\"); // Check driver name\r",
+							"        pm.expect(wyattLiamData.lat).to.eql(25.357119); // Check latitude\r",
+							"        pm.expect(wyattLiamData.lng).to.eql(55.391068); // Check longitude\r",
+							"        pm.expect(wyattLiamData.location).to.eql(\"Rolla, Sharjah, the UAE\"); // Check location\r",
+							"        pm.expect(wyattLiamData.imageURL).to.eql(\"https://i.picsum.photos/id/583/200/300.jpg\"); // Check image URL\r",
+							"        pm.expect(wyattLiamData.lastUpdated).to.be.a('string'); // Check lastUpdated is a string\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Data Assertions - Name Data type to be string\", function() {\r",
+							"        pm.expect(wyattLiamData.driverName).to.be.a(\"string\"); // Check driver name\r",
+							"    });\r",
+							"\r",
+							"pm.test(\"Data Assertions - Verify Plate number is of length 7\", function() {\r",
+							"        pm.expect(wyattLiamData.plateNo).to.be.a('string').and.to.have.lengthOf(7); // Check Number plate length\r",
+							"    });\r",
+							"\r",
+							"pm.test(\"Data Assertions - Verify Lastupdated is a string\", function() {\r",
+							"        pm.expect(wyattLiamData.lastUpdated).to.be.a('string'); // Check Number plate length\r",
+							"    });\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://interviewtestapi.azurewebsites.net/api/candidate",
+					"protocol": "https",
+					"host": [
+						"interviewtestapi",
+						"azurewebsites",
+						"net"
+					],
+					"path": [
+						"api",
+						"candidate"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "lastUpdated",
+							"disabled": true
+						},
+						{
+							"key": "direction",
+							"value": "desc",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
