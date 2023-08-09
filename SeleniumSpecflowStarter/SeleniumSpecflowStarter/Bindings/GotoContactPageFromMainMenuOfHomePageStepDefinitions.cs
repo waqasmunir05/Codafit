@@ -7,11 +7,8 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using SeleniumSpecflowStarter.Models;
 using TechTalk.SpecFlow;
-using System;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+
 
 namespace SeleniumSpecflowStarter.Bindings
 {
@@ -47,7 +44,7 @@ namespace SeleniumSpecflowStarter.Bindings
         [When(@"User Clicks on Contact button on the Banner")]
         public void WhenUserClicksOnContactButtonOnTheBanner()
         {
-
+            // Locate Contact us button on Banner
             var towhom = driver.FindElement(By.XPath("/html/body/div[1]/div/div/div/div[2]/div/section/div[6]/div/div/div/div/div/div[1]/div/h2"));
             SeleniumMethods.ScrollTo(driver, towhom);
             Thread.Sleep(2000);

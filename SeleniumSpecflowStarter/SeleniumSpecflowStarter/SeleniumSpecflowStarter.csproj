@@ -20,9 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Bindings\OwnerlLoginWithEmiratesID.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
